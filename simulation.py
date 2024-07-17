@@ -71,10 +71,7 @@ reco = 8.4e-9            # Recombination rate
 migration_rates = [1e-9, 0.1, 0.9]
 
 # Output directory
-output_directory = "/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results"
-
-# Ensure the output directory exists
-os.makedirs(output_directory, exist_ok=True)
+output_directory = "/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Simulation 2"
 
 # Function to save haplotype data
 def save_haplotypes(ts, output_file):
@@ -85,7 +82,7 @@ def save_haplotypes(ts, output_file):
 # Perform simulations
 for mig_rate in migration_rates:
     params["mig"] = mig_rate
-    for i in range(100):
+    for i in range(10000):
         ts = im(params, sample_sizes, seed, reco)
         
         # Define the output file name for each haplotype data file
