@@ -1,0 +1,5 @@
+Simulations = 100
+Batches = 16, 32
+Added layers = Dropout layer
+Objective = Added dropout layers
+Result = 16 showed better curve for training but 32 showed some improvements in validation accuracy

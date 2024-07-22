@@ -1,0 +1,6 @@
+Simulations = 100
+Batch = 16
+Added layers = L2 Regularisation
+Alpha values = 0.1, 0.3, 0.5, 0.9
+Objective = Test model with L2 Regularisation
+Result = Curves become smoother with higher alpha values

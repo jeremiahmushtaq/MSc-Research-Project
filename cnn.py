@@ -27,7 +27,7 @@ def load_haplotypes(directory):
     
     return haplotypes
 
-# Set directories' path
+# Set directory paths
 high_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1 (100)/High'
 medium_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1 (100)/Medium'
 low_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1 (100)/Low'
@@ -38,7 +38,7 @@ medium = load_haplotypes(medium_dir)
 low = load_haplotypes(low_dir)
 
 # User status update
-print("Completed Setup & Loading.")
+print("Completed setup and loading.")
 
 """
 Data Preprocessing
@@ -66,11 +66,29 @@ high_hap_trunc = np.array(truncate(high))
 med_hap_trunc = np.array(truncate(medium))
 low_hap_trunc = np.array(truncate(low))
 
-# Build dataset
-data = np.concatenate((high_hap_trunc, med_hap_trunc, low_hap_trunc), axis=0)
+# Build original dataset
+original_data = np.concatenate((high_hap_trunc, med_hap_trunc, low_hap_trunc), axis=0)
 
 # User status update
-print("Completed Data Preprocessing.")
+print("Completed data pre-processing.")
+
+"""
+Data Augmentation
+"""
+# Flip horizontally along the width axis
+flipped_data_horizontal = np.flip(original_data, axis=2)
+
+# Flip vertically along the height axis
+flipped_data_vertical = np.flip(original_data, axis=1)
+
+# Flip along the depth axis
+flipped_data_depth = np.flip(original_data, axis=0)
+
+# Compile orginial and augmented datasets
+data = np.concatenate((original_data, flipped_data_horizontal, flipped_data_vertical, flipped_data_depth), axis=0)
+
+# User status update
+print("Completed data augmentation.")
 
 """
 Build Model
@@ -81,14 +99,27 @@ X = tf.reshape(X, [X.shape[0], X.shape[1], X.shape[2], 1]) # (no. of simulations
 
 # Define labels
 y = tf.constant(
+    # Original
     [0]*100 + # High
     [1]*100 + # Medium
-    [2]*100   # Low
+    [2]*100 + # Low
+    # Horizontal
+    [0]*100 + # High 
+    [1]*100 + # Medium
+    [2]*100 + # Low
+    # Vertical
+    [0]*100 + # High
+    [1]*100 + # Medium
+    [2]*100 + # Low
+    # Depth
+    [2]*100 + # High
+    [1]*100 + # Medium
+    [0]*100   # Low
 )
 
 # Define cnn layers
 model = Sequential([
-    Input(shape=(100, 4882, 1)),
+    Input(shape=(100, min_hap_len, 1)),
     Conv2D(filters=64, kernel_size=(3, 3), activation='relu'),
     MaxPooling2D(pool_size=(3, 3)),
     Conv2D(filters=32, kernel_size=(3, 3), activation='relu'),
@@ -111,7 +142,7 @@ print("Designed and fitted model.")
 Save Tabular Metrics
 """
 # File logistics
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Tables/Multilayer Testing'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Tables/Mirroring'
 output_file_name = 'metrics.tsv'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
@@ -141,7 +172,7 @@ print("Tabular metrics saved.")
 Save Graphical Metrics
 """
 # Define the directory and file name
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Images/Multilayer Testing'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Images/Mirroring'
 output_file_name = 'plot.png'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
