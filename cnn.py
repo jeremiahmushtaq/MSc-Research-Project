@@ -5,6 +5,8 @@ from tensorflow.keras.models import Sequential  # type: ignore
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense # type: ignore
 from matplotlib import pyplot as plt
 import pandas as pd
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 """
 Setup and Loading
@@ -52,14 +54,14 @@ print("Minimum Sequence Length:", min_hap_len)
 
 # Define function to truncate sequences
 def truncate(category):
-    test = []
+    trunc_seqs = []
     for sim in category:
         temp = [] 
         for ind_seq in sim:
             x = ind_seq[:min_hap_len]
             temp.append(x)
-        test.append(temp)
-    return test
+        trunc_seqs.append(temp)
+    return trunc_seqs
 
 # Truncate sequences
 high_hap_trunc = np.array(truncate(high))
@@ -136,7 +138,7 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 hist = model.fit(X, y, epochs=10, batch_size=16, validation_split=0.2)
 
 # User status update
-print("Designed and fitted model.")
+print("Designed, fitted and saved model.")
 
 """
 Save Tabular Metrics
@@ -200,3 +202,74 @@ print("Results saved as", output_file_name)
 
 # User status update
 print("Graphical metrics saved.")
+
+"""
+Model Testing
+"""
+# Load test batches
+test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/High')
+test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/Medium')
+test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/Low')
+
+# Define pre-processing function
+def process_seqs(batch):
+    # Instantize padding length error
+    class PaddingError(Exception):
+        pass
+    # Function logic
+    processed_seqs = []
+    for sim in batch:
+        temp = []
+        for ind_seq in sim:
+            if len(ind_seq) > 4882:
+                x = ind_seq[:4882]
+                temp.append(x)
+            else:
+                padding = 4882 - len(ind_seq)
+                if padding < 0:
+                    raise PaddingError("padding length is negative")
+                else:
+                    x = np.pad(array=ind_seq, pad_width=(0,padding), mode='constant', constant_values=-1)
+                    temp.append(x)
+        processed_seqs.append(temp)
+    # Convert to numpy array
+    return(np.array(processed_seqs))
+
+# Preprocess test batches
+test_data_1 = process_seqs(test_data_1)
+test_data_2 = process_seqs(test_data_2)
+test_data_3 = process_seqs(test_data_3)
+
+# Build test dataset
+test_data = np.concatenate((test_data_1, test_data_2, test_data_3), axis=0)
+
+# Fit test data to tensorflow format
+X = tf.constant(test_data)
+X = tf.reshape(X, [X.shape[0], X.shape[1], X.shape[2], 1])
+
+# Deploy model for prediction
+preds = model.predict(X)
+predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2  
+
+# Calculating Accuracies
+high_mig_accuracy = f"{round((predicted_labels[0:100] == 0).sum() / len(predicted_labels[:100]) * 100, 2)}%"
+medium_mig_accuracy = f"{round((predicted_labels[101:201] == 1).sum() / len(predicted_labels[101:200]) * 100, 2)}%"
+low_mig_accuracy = f"{round((predicted_labels[201:300] == 2).sum() / len(predicted_labels[201:300]) * 100, 2)}%"
+
+# Visualise confusion matrix
+true_labels = np.array(
+    [0]*100 +
+    [1]*100 +
+    [2]*100
+)
+
+conf_matrix = confusion_matrix(true_labels, predicted_labels)
+
+plt.figure(figsize=(10, 7))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['High', 'Medium', 'Low'],
+            yticklabels=['High', 'Medium', 'Low'])
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title('Confusion Matrix')
+plt.show()
