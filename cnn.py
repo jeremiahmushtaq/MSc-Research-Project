@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
+from tensorflow.keras.models import load_model
 
 """
 Setup and Loading
@@ -137,6 +138,9 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 # Fit model
 hist = model.fit(X, y, epochs=10, batch_size=16, validation_split=0.2)
 
+# Save model
+model.save('cnn.h5')
+
 # User status update
 print("Designed, fitted and saved model.")
 
@@ -206,10 +210,13 @@ print("Graphical metrics saved.")
 """
 Model Testing
 """
+# Load model
+model = load_model('cnn.h5')
+
 # Load test batches
-test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/High')
-test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/Medium')
-test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (test batch)/Low')
+test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/High')
+test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/Medium')
+test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/Low')
 
 # Define pre-processing function
 def process_seqs(batch):
@@ -249,22 +256,19 @@ X = tf.reshape(X, [X.shape[0], X.shape[1], X.shape[2], 1])
 
 # Deploy model for prediction
 preds = model.predict(X)
-predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2  
+predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2
 
-# Calculating Accuracies
-high_mig_accuracy = f"{round((predicted_labels[0:100] == 0).sum() / len(predicted_labels[:100]) * 100, 2)}%"
-medium_mig_accuracy = f"{round((predicted_labels[101:201] == 1).sum() / len(predicted_labels[101:200]) * 100, 2)}%"
-low_mig_accuracy = f"{round((predicted_labels[201:300] == 2).sum() / len(predicted_labels[201:300]) * 100, 2)}%"
-
-# Visualise confusion matrix
+# Define true labels
 true_labels = np.array(
     [0]*100 +
     [1]*100 +
     [2]*100
 )
 
+# Generate confusion matrix
 conf_matrix = confusion_matrix(true_labels, predicted_labels)
 
+# Visulaise confusion matrix
 plt.figure(figsize=(10, 7))
 sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
             xticklabels=['High', 'Medium', 'Low'],
@@ -272,4 +276,4 @@ sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
 plt.xlabel('Predicted')
 plt.ylabel('True')
 plt.title('Confusion Matrix')
-plt.show()
+plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/confusion matrix.png')
