@@ -149,7 +149,7 @@ else:
 
 # Output metrics table
 metric_titles = ['Average Bootstrap Accuracy', 'Bootstrap Standard Deviation', 'Average Permutation Accuracy', 'Permutation Standard Deviation', 'P-value', 'Is Result Significant?']
-metric_values = [f"{average_boot_accuracy*100:.2f}%", f"{std_boot_accuracy*100:.2f}%", f"{average_perm_accuracy*100:.2f}%", f"{std_perm_accuracy*100:.2f}%", p_value, outcome]
+metric_values = [f"{average_boot_accuracy*100:.2f}%", f"{std_boot_accuracy*100:.2f}%", f"{average_perm_accuracy*100:.2f}%", f"{std_perm_accuracy*100:.2f}%", f"{p_value:.2f}", outcome]
 metrics_df = pd.DataFrame({
     'Evaluation Metric': metric_titles,
     'Value': metric_values
