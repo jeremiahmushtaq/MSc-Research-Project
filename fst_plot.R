@@ -4,7 +4,7 @@ install.packages("dplyr")  # Run this line if dplyr is not installed
 library(dplyr)
 
 # Set path to data
-setwd("/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results") # nolint
+setwd("/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results")
 
 # Import data
 data <- read.csv(file = "fst_sims.txt", sep = "\t")
@@ -50,17 +50,17 @@ density_histogram_plots <- ggplot(data, aes(x = `FST`, fill = factor(Migration_R
     panel.grid.minor = element_blank(),
     panel.border = element_rect(color = "black", fill = NA, size = 1),
     axis.line = element_line(color = "black"),
-    axis.title.x = element_text(size = 24, face = "bold", margin = margin(t = 20)),  # Bold x-axis title
-    axis.text.x = element_text(size = 18),  # Increase x-tick size
-    axis.text.y = element_text(size = 18),  # Increase y-tick size
-    legend.text = element_text(size = 18),  # Increase legend text size
-    legend.title = element_text(size = 18), # Ensure the legend title size is also increased
-    plot.title = element_blank(),  # Remove the plot title
-    legend.position = c(0.895, 0.875)  # Move the legend inside the plot
+    axis.title.x = element_text(size = 24, face = "bold", margin = margin(t = 15)),
+    axis.text.x = element_text(size = 18),
+    axis.text.y = element_text(size = 18),
+    legend.text = element_text(size = 18),
+    legend.title = element_text(size = 18),
+    plot.title = element_blank(),
+    legend.position = c(0.895, 0.875)
   )
 
 # Set path to save plot
 setwd("/Users/jeremiahmushtaq/Documents/University/MSc Research Project")
 
 # Save the plot
-ggsave("fst_plot.png", plot = density_histogram_plots, width = 10, height = 6, dpi = 300) # nolint
+ggsave("fst_plot.png", plot = density_histogram_plots, width = 10, height = 6, dpi = 300)
