@@ -71,7 +71,7 @@ plt.xlabel('Predicted Labels', fontsize=30, labelpad=20, weight='bold') # Axes t
 plt.ylabel('True Labels', fontsize=30, labelpad=20, weight='bold')
 plt.xticks(fontsize=24) # Tick label settings
 plt.yticks(fontsize=24)
-plt.show()
+plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/SVM/confusion matrix svm.png')
 
 # Model accuracy bootstrap validation
 n_bootstrap_iterations = 1000
