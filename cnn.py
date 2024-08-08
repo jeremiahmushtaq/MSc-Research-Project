@@ -214,9 +214,9 @@ Model Testing
 model = load_model('cnn.h5')
 
 # Load test batches
-test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/High')
-test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/Medium')
-test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5 (100)/Low')
+test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/High')
+test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/Medium')
+test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/Low')
 
 # Define pre-processing function
 def process_seqs(batch):
@@ -269,11 +269,15 @@ true_labels = np.array(
 conf_matrix = confusion_matrix(true_labels, predicted_labels)
 
 # Visulaise confusion matrix
-plt.figure(figsize=(10, 7))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
-            xticklabels=['High', 'Medium', 'Low'],
-            yticklabels=['High', 'Medium', 'Low'])
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.title('Confusion Matrix')
-plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/confusion matrix.png')
+plt.figure(figsize=(13, 9))
+heatmap = sns.heatmap(conf_matrix, annot=True, fmt='.2f', cmap='Blues', # Create the heatmap with larger annotation font size
+                      xticklabels=['High', 'Medium', 'Low'],
+                      yticklabels=['High', 'Medium', 'Low'],
+                      annot_kws={"size": 30})
+colorbar = heatmap.collections[0].colorbar # Colour bar settings
+colorbar.ax.tick_params(labelsize=24)
+plt.xlabel('Predicted Labels', fontsize=30, labelpad=20, weight='bold') # Axes title settings
+plt.ylabel('True Labels', fontsize=30, labelpad=20, weight='bold')
+plt.xticks(fontsize=24) # Tick label settings
+plt.yticks(fontsize=24)
+plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/confusion matrix cnn.png')
