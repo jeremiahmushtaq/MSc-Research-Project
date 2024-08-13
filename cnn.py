@@ -5,11 +5,11 @@ from tensorflow.keras.models import Sequential  # type: ignore
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense # type: ignore
 from matplotlib import pyplot as plt
 import pandas as pd
-from sklearn.metrics import confusion_matrix
 import seaborn as sns
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model  # type: ignore
 from scipy.stats import binomtest
 import pandas as pd
+from sklearn.metrics import precision_score, recall_score, f1_score, classification_report, confusion_matrix
 
 """
 Setup and Loading
@@ -147,7 +147,7 @@ model.save('cnn.h5')
 print("Designed, fitted and saved model.")
 
 """
-Save Tabular Metrics
+Save Tabular Training Metrics
 """
 # File logistics
 output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Tables/Mirroring'
@@ -177,7 +177,7 @@ print("Results saved as", output_file_name)
 print("Tabular metrics saved.")
 
 """
-Save Graphical Metrics
+Save Graphical Training Metrics
 """
 # Define the directory and file name
 output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Evaluation Logs/Images/Mirroring'
@@ -258,9 +258,15 @@ X = tf.reshape(X, [X.shape[0], X.shape[1], X.shape[2], 1])
 
 # Deploy model for prediction
 preds = model.predict(X)
-predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2
 
-# Define true labels
+"""
+Testing Evaluation Metrics
+"""
+# Specify directory to save metrics
+testing_metrics_file_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN Testing Metrics'
+
+# Define labels
+predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2
 true_labels = np.array(
     [0]*100 +
     [1]*100 +
@@ -282,7 +288,49 @@ plt.xlabel('Predicted Labels', fontsize=30, labelpad=20, weight='bold') # Axes t
 plt.ylabel('True Labels', fontsize=30, labelpad=20, weight='bold')
 plt.xticks(fontsize=24) # Tick label settings
 plt.yticks(fontsize=24)
-plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/confusion matrix cnn.png')
+testing_metrics_file_name = 'confusion matrix cnn.png'
+full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
+plt.savefig(full_metrics_path)
+
+# Class-wise precision, recall, f1-score
+precision = precision_score(true_labels, predicted_labels, average=None)
+recall = recall_score(true_labels, predicted_labels, average=None)
+f1 = f1_score(true_labels, predicted_labels, average=None)
+
+# Round-off decimal numbers
+precision = np.round(precision, 2)
+recall = np.round(recall, 2)
+f1 = np.round(f1, 2)
+
+# Create class-wise testing metrics dataframe 
+df = pd.DataFrame({
+    'Migration Rate Class': ['High', 'Medium', 'Low'],
+    'Precision': precision,
+    'Recall': recall,
+    'F1-Score': f1
+})
+
+# Save results
+testing_metrics_file_name = 'class-wise testing metrics.tsv'
+full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
+df.to_csv(full_metrics_path, sep='\t', index=False)
+
+# Macro-averaged precision, recall, f1-score
+macro_precision = precision_score(true_labels, predicted_labels, average='macro')
+macro_recall = recall_score(true_labels, predicted_labels, average='macro')
+macro_f1 = f1_score(true_labels, predicted_labels, average='macro')
+
+# Create macro testing metrics dataframe
+df = pd.DataFrame({
+    'Precision': [f"{macro_precision:.2f}"],
+    'Recall': [f"{macro_recall:.2f}"],
+    'F1-Score': [f"{macro_f1:.2f}"]
+})
+
+# Save results
+testing_metrics_file_name = 'macro testing metrics.tsv'
+full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
+df.to_csv(full_metrics_path, sep='\t', index=False)
 
 """
 Binomial Testing
@@ -310,11 +358,10 @@ else:
 metric_titles = ('Correct Predictions', 'Total Predictions', 'Model Accuracy', 'Baseline Accuracy', 'P-value', 'Significance Threshold', 'Is Result Significant?')
 metric_values = [correct_predictions, total_predictions, f"{test_accuracy:.2f}%", f"{baseline_accuracy*100:.2f}%", f"{binom_test.pvalue:.2f}", alpha, outcome]
 metric_titles
-metrics_df = pd.DataFrame({
+df = pd.DataFrame({
     'Evaluation Metric': metric_titles,
     'Value': metric_values
 })
-metrics_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project'
-metrics_file_name = 'metrics cnn.tsv'
-full_metrics_path = os.path.join(metrics_path, metrics_file_name)
-metrics_df.to_csv(full_metrics_path, sep='\t', index=False)
+testing_metrics_file_name = 'binomial testing.tsv'
+full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
+df.to_csv(full_metrics_path, sep='\t', index=False)
