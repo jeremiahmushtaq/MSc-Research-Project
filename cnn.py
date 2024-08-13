@@ -297,6 +297,7 @@ baseline_accuracy = 1/3
 
 # Perform binomial test
 binom_test = binomtest(correct_predictions, total_predictions, baseline_accuracy, alternative='greater')
+test_accuracy = correct_predictions/total_predictions*100
 
 # Check if the result is statistically significant
 alpha = 0.05
@@ -306,12 +307,14 @@ else:
     outcome = "Insignficant"
 
 # Save results
-metric_titles = ('Correct Predictions', 'Total Predictions', 'Baseline Accuracy', 'P-value', 'Significance Threshold', 'Is Result Significant?')
-metric_values = [correct_predictions, total_predictions, f"{baseline_accuracy*100:.2f}%", f"{binom_test.pvalue:.2f}", alpha, outcome]
+metric_titles = ('Correct Predictions', 'Total Predictions', 'Model Accuracy', 'Baseline Accuracy', 'P-value', 'Significance Threshold', 'Is Result Significant?')
+metric_values = [correct_predictions, total_predictions, f"{test_accuracy:.2f}%", f"{baseline_accuracy*100:.2f}%", f"{binom_test.pvalue:.2f}", alpha, outcome]
 metric_titles
 metrics_df = pd.DataFrame({
     'Evaluation Metric': metric_titles,
     'Value': metric_values
 })
-full_metrics_path = os.path.join(os.getcwd(), 'metrics cnn.tsv')
-metrics_df.to_csv(full_metrics_path, sep='\t', index=False))
+metrics_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project'
+metrics_file_name = 'metrics cnn.tsv'
+full_metrics_path = os.path.join(metrics_path, metrics_file_name)
+metrics_df.to_csv(full_metrics_path, sep='\t', index=False)
