@@ -148,13 +148,13 @@ else:
     outcome = 'Insignificant'
 
 # Output metrics table
-metric_titles = ['Average Bootstrap Accuracy', 'Bootstrap Standard Deviation', 'Average Permutation Accuracy', 'Permutation Standard Deviation', 'P-value', 'Is Result Significant?']
-metric_values = [f"{average_boot_accuracy*100:.2f}%", f"{std_boot_accuracy*100:.2f}%", f"{average_perm_accuracy*100:.2f}%", f"{std_perm_accuracy*100:.2f}%", f"{p_value:.2f}", outcome]
+metric_titles = ['Number of Bootstrap/Permutation Iterations','Average Bootstrap Accuracy', 'Bootstrap Standard Deviation', 'Average Permutation Accuracy', 'Permutation Standard Deviation', 'P-value', 'Is Result Significant?']
+metric_values = [n_permutation_iterations, f"{average_boot_accuracy*100:.2f}%", f"{std_boot_accuracy*100:.2f}%", f"{average_perm_accuracy*100:.2f}%", f"{std_perm_accuracy*100:.2f}%", f"{p_value:.2f}", outcome]
 metrics_df = pd.DataFrame({
     'Evaluation Metric': metric_titles,
     'Value': metric_values
 })
 metrics_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/SVM'
-metrics_file_name = 'metrics svm.tsv'
+metrics_file_name = 'new metrics svm.tsv'
 full_metrics_path = os.path.join(metrics_path, metrics_file_name)
 metrics_df.to_csv(full_metrics_path, index=False)
