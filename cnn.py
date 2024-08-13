@@ -8,6 +8,8 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
 from tensorflow.keras.models import load_model
+from scipy.stats import binomtest
+import pandas as pd
 
 """
 Setup and Loading
@@ -214,9 +216,9 @@ Model Testing
 model = load_model('cnn.h5')
 
 # Load test batches
-test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/High')
-test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/Medium')
-test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 5/Low')
+test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/High')
+test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/Medium')
+test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/Low')
 
 # Define pre-processing function
 def process_seqs(batch):
@@ -281,3 +283,36 @@ plt.ylabel('True Labels', fontsize=30, labelpad=20, weight='bold')
 plt.xticks(fontsize=24) # Tick label settings
 plt.yticks(fontsize=24)
 plt.savefig('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/confusion matrix cnn.png')
+
+"""
+Binomial Testing
+"""
+
+# Calculate the number of correct predictions
+correct_predictions = np.sum(predicted_labels == true_labels)
+total_predictions = len(true_labels)
+
+# Baseline accuracy (random guessing for 3 classes)
+baseline_accuracy = 1/3
+
+# Perform binomial test
+binom_test = binomtest(correct_predictions, total_predictions, baseline_accuracy, alternative='greater')
+
+# Check if the result is statistically significant
+alpha = 0.05
+if binom_test.pvalue < alpha:
+    outcome = "Significant"
+else:
+    outcome = "Insignficant"
+
+# Save results
+metric_titles = ('Correct Predictions', 'Total Predictions', 'Baseline Accuracy', 'P-value', 'Significance Threshold', 'Is Result Significant?')
+metric_values = [correct_predictions, total_predictions, f"{baseline_accuracy*100:.2f}%", f"{binom_test.pvalue:.2f}", alpha, outcome]
+metric_titles
+metrics_df = pd.DataFrame({
+    'Evaluation Metric': metric_titles,
+    'Value': metric_values
+})
+full_metrics_path = os.path.join(os.getcwd(), 'metrics cnn.tsv')
+metrics_df.to_csv(full_metrics_path, sep='\t', index=False)
+os.getcwd()
