@@ -314,5 +314,4 @@ metrics_df = pd.DataFrame({
     'Value': metric_values
 })
 full_metrics_path = os.path.join(os.getcwd(), 'metrics cnn.tsv')
-metrics_df.to_csv(full_metrics_path, sep='\t', index=False)
-os.getcwd()
+metrics_df.to_csv(full_metrics_path, sep='\t', index=False))
