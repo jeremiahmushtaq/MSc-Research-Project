@@ -323,7 +323,7 @@ df = df.T
 # Save results
 testing_metrics_file_name = 'testing metrics cnn.tsv'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
-df.to_csv(full_metrics_path, sep='\t', index=False)
+df.to_csv(full_metrics_path, sep='\t', index=True)
 
 """
 Binomial Testing
