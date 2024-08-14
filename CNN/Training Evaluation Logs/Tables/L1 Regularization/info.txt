@@ -1,0 +1,6 @@
+Simulation = 100
+Batch = 16
+Additional layers to model = L1 regularisation
+Alpha values = 0, 0.01, 0.3, 0.5, 0.9
+Objective = Test model with L1 regularisaiton at different alpha values
+Result = Adding a layer of L1 regularisation gives really good loss curves but training accuracy stays at ~0.4 and validation accuracy remains unaffected. A low alpha value like 0.01 works.

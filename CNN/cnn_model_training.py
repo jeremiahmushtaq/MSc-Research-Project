@@ -128,7 +128,7 @@ print("Designed, fitted and saved model.")
 Save Tabular Training Metrics
 """
 # File logistics
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Evaluation Logs/Tables/Mirroring'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Training Evaluation Logs/Tables/Mirroring'
 output_file_name = 'metrics.tsv'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
@@ -158,7 +158,7 @@ print("Tabular metrics saved.")
 Save Graphical Training Metrics
 """
 # Define the directory and file name
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Evaluation Logs/Images/Mirroring'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Training Evaluation Logs/Images/Mirroring'
 output_file_name = 'plot.png'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
