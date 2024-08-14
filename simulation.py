@@ -71,7 +71,7 @@ reco = 8.4e-9            # Recombination rate
 migration_rates = [1e-9, 0.1, 0.9]
 
 # Output directory
-output_directory = "/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Simulation 3"
+output_directory = "/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results"
 
 # Function to save haplotype data
 def save_haplotypes(ts, output_file):
@@ -79,10 +79,10 @@ def save_haplotypes(ts, output_file):
     haplotypes = ts.genotype_matrix().T  # Transpose to get individuals x variants
     np.savetxt(output_file, haplotypes, fmt='%d', delimiter='\t')
 
-# Perform simulations
+# Perform simulations of haplotype data
 for mig_rate in migration_rates:
     params["mig"] = mig_rate
-    for i in range(1000):
+    for i in range(100):
         ts = im(params, sample_sizes, seed, reco)
         
         # Define the output file name for each haplotype data file
@@ -90,3 +90,36 @@ for mig_rate in migration_rates:
         
         # Save haplotype data to a file
         save_haplotypes(ts, output_file)
+
+# Function to save FST values to a single file
+def complie_fst(fst_values, output_file):
+    # Save all FST values to a file with a column for migration rate
+    with open(output_file, "w") as f:
+        f.write("Migration_Rate\tFST\n")
+        for mig_rate, fst in fst_values:
+            f.write(f"{mig_rate}\t{fst}\n")
+
+# Loop for calculating and saving FST values
+fst_data = []
+for mig_rate in migration_rates:
+    params["mig"] = mig_rate
+    for i in range(1000):
+        ts = im(params, sample_sizes, seed, reco)
+        
+        # Define the sample sets for FST calculation
+        sample_sets = [
+            list(range(sample_sizes[0])),  # Samples from population 1
+            list(range(sample_sizes[0], sample_sizes[0] + sample_sizes[1]))  # Samples from population 2
+        ]
+
+        # Calculate FST value
+        fst = ts.Fst(sample_sets)
+        
+        # Append the FST value and migration rate to the list
+        fst_data.append((mig_rate, fst))
+
+# Define the output file name for all FST values
+fst_output_file = os.path.join(output_directory, "fst_sims.txt")
+fst_output_file
+# Save all FST values to a single file
+complie_fst(fst_data, fst_output_file)
