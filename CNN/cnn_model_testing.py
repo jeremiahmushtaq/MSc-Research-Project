@@ -79,17 +79,12 @@ recall = np.round(recall, 2)
 f1 = np.round(f1, 2)
 
 # Create class-wise testing metrics dataframe 
-df = pd.DataFrame({
+df_1 = pd.DataFrame({
     'Migration Rate Class': ['High', 'Medium', 'Low'],
     'Precision': precision,
     'Recall': recall,
     'F1-Score': f1
 })
-
-# Save results
-testing_metrics_file_name = 'class-wise testing metrics.tsv'
-full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
-df.to_csv(full_metrics_path, sep='\t', index=False)
 
 # Macro-averaged precision, recall, f1-score
 macro_precision = precision_score(true_labels, predicted_labels, average='macro')
@@ -97,14 +92,18 @@ macro_recall = recall_score(true_labels, predicted_labels, average='macro')
 macro_f1 = f1_score(true_labels, predicted_labels, average='macro')
 
 # Create macro testing metrics dataframe
-df = pd.DataFrame({
+df_2 = pd.DataFrame({
+    'Migration Rate Class': ['Macro Average'],
     'Precision': [f"{macro_precision:.2f}"],
     'Recall': [f"{macro_recall:.2f}"],
     'F1-Score': [f"{macro_f1:.2f}"]
 })
 
+# Merge dataframes
+df = pd.concat([df_1, df_2], ignore_index=True)
+
 # Save results
-testing_metrics_file_name = 'macro testing metrics.tsv'
+testing_metrics_file_name = 'testing metrics cnn.tsv'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 df.to_csv(full_metrics_path, sep='\t', index=True)
 
