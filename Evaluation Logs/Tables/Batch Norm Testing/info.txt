@@ -1,4 +1,0 @@
-Simulations = 100
-Batch sizes = 16, 32
-Objective = Test model with batch normilisation
-Results = 16 performed better with an increase in validation accuracy but that could be due to data leakage or overfitting

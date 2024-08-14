@@ -1,5 +1,0 @@
-Simulation = 100
-Batch size = 16
-Added layers = Batch Optimisation
-Objective = Test batch optimisation as the only added layer
-Results = 

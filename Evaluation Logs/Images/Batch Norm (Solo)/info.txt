@@ -1,5 +1,0 @@
-Simulation = 100
-Batch size = 16
-Added layers = Batch Optimisation
-Objective = Test batch optimisation as the only added layer
-Results = Really good smooth training accuracy curve, no change in validation curve, fairly good training loss curve, validation loss curve increasing as opposed to decreasing

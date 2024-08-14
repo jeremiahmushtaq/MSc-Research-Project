@@ -1,4 +1,0 @@
-Simulations = 100
-Objective = Testing with different batch sizes
-Batch sizes = 8, 16, 32, 64
-Results = 16 and 32 seem to be most promising. 128 batch size was either too big or segmentation was not possible. Further analysis with 16 and 32 need to be done.

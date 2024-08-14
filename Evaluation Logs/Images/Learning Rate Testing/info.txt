@@ -1,4 +1,0 @@
-Simulations = 100
-Batch size = 16
-Objective = Test with learning rate
-Result = Very slight improvment in training accuracy and validation loss

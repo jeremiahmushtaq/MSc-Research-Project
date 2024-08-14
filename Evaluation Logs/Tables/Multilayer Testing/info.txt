@@ -1,6 +1,0 @@
-Simulations = 100
-Batch size = 16
-Alpha value = 0.01
-Added layers = dropout, batch normalisation, L2 regularisation
-Objective = Evaluate model with multiple layers
-Result = Not good.

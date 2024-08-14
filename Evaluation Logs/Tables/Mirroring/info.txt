@@ -1,5 +1,0 @@
-Simulations = 100
-Batch size = 16
-Added layers = None
-Objective = Test data augmentation approach of three dimensional mirroring of dataset.
-Result = Sucessful. Hyperbole type increase of training and validation accuracy and loss. 
