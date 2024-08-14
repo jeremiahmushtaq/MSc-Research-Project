@@ -1,0 +1,4 @@
+Number of simulations = 100
+High migration rate = 0.9
+Meidum migration rate = 0.1
+Low migration rate = 1e-09
