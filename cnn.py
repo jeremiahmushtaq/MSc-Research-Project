@@ -9,7 +9,7 @@ import seaborn as sns
 from tensorflow.keras.models import load_model  # type: ignore
 from scipy.stats import binomtest
 import pandas as pd
-from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score, classification_report, confusion_matrix
 
 """
 Setup and Loading
@@ -292,7 +292,7 @@ testing_metrics_file_name = 'confusion matrix cnn.png'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 plt.savefig(full_metrics_path)
 
-# Determine class-wise precision, recall, f1-score
+# Class-wise precision, recall, f1-score
 precision = precision_score(true_labels, predicted_labels, average=None)
 recall = recall_score(true_labels, predicted_labels, average=None)
 f1 = f1_score(true_labels, predicted_labels, average=None)
@@ -302,26 +302,33 @@ precision = np.round(precision, 2)
 recall = np.round(recall, 2)
 f1 = np.round(f1, 2)
 
-# Determine macro-averaged precision, recall, f1-score
-macro_precision = precision_score(true_labels, predicted_labels, average='macro')
-macro_recall = recall_score(true_labels, predicted_labels, average='macro')
-macro_f1 = f1_score(true_labels, predicted_labels, average='macro')
-
 # Create class-wise testing metrics dataframe 
 df = pd.DataFrame({
     'Migration Rate Class': ['High', 'Medium', 'Low'],
     'Precision': precision,
     'Recall': recall,
-    'F1-Score': f1,
-    'Macro': [f"{macro_precision:.2f}", f"{macro_recall:.2f}", f"{macro_f1:.2f}"]
+    'F1-Score': f1
 })
 
-# Transpose dataframe and set row names
-df.set_index('Migration Rate Class', inplace=True)
-df = df.T
+# Save results
+testing_metrics_file_name = 'class-wise testing metrics.tsv'
+full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
+df.to_csv(full_metrics_path, sep='\t', index=False)
+
+# Macro-averaged precision, recall, f1-score
+macro_precision = precision_score(true_labels, predicted_labels, average='macro')
+macro_recall = recall_score(true_labels, predicted_labels, average='macro')
+macro_f1 = f1_score(true_labels, predicted_labels, average='macro')
+
+# Create macro testing metrics dataframe
+df = pd.DataFrame({
+    'Precision': [f"{macro_precision:.2f}"],
+    'Recall': [f"{macro_recall:.2f}"],
+    'F1-Score': [f"{macro_f1:.2f}"]
+})
 
 # Save results
-testing_metrics_file_name = 'testing metrics cnn.tsv'
+testing_metrics_file_name = 'macro testing metrics.tsv'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 df.to_csv(full_metrics_path, sep='\t', index=True)
 
