@@ -1,3 +1,4 @@
+# Import dependancies
 import os
 import numpy as np
 import tensorflow as tf
@@ -12,13 +13,16 @@ from functions import load_haplotypes, process_seqs
 """
 Model Testing
 """
+# Specifiy path to model
+os.chdir('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN')
+
 # Load model
 model = load_model('cnn.h5')
 
 # Load test batches
-test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/High')
-test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/Medium')
-test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Test Batches/Rep 6/Low')
+test_data_1 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Testing Data/Rep 6/High')
+test_data_2 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Testing Data/Rep 6/Medium')
+test_data_3 = load_haplotypes('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Testing Data/Rep 6/Low')
 
 # Preprocess test batches
 test_data_1 = process_seqs(test_data_1)
@@ -36,10 +40,10 @@ X = tf.reshape(X, [X.shape[0], X.shape[1], X.shape[2], 1])
 preds = model.predict(X)
 
 """
-Testing Evaluation Metrics
+Evaluation Metrics
 """
 # Specify directory to save metrics
-testing_metrics_file_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/CNN Testing Metrics'
+testing_metrics_file_path = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN'
 
 # Define labels
 predicted_labels = np.argmax(preds, axis=1) # High=0, Medium=1, Low=2
@@ -64,7 +68,7 @@ plt.xlabel('Predicted Labels', fontsize=30, labelpad=20, weight='bold') # Axes t
 plt.ylabel('True Labels', fontsize=30, labelpad=20, weight='bold')
 plt.xticks(fontsize=24) # Tick label settings
 plt.yticks(fontsize=24)
-testing_metrics_file_name = 'confusion matrix cnn.png'
+testing_metrics_file_name = 'confusion_matrix_cnn.png'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 plt.savefig(full_metrics_path)
 
@@ -103,14 +107,13 @@ df_2 = pd.DataFrame({
 df = pd.concat([df_1, df_2], ignore_index=True)
 
 # Save results
-testing_metrics_file_name = 'testing metrics cnn.tsv'
+testing_metrics_file_name = 'testing_metrics_cnn.tsv'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 df.to_csv(full_metrics_path, sep='\t', index=True)
 
 """
 Binomial Testing
 """
-
 # Calculate the number of correct predictions
 correct_predictions = np.sum(predicted_labels == true_labels)
 total_predictions = len(true_labels)

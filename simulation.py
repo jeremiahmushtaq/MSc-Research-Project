@@ -1,7 +1,7 @@
 """
-This script is for simulating data for the purpose of training a GAN.
-The method is to use the isolation with migration scenario from the pg-gan simulation software.
-The msprime module is used to perform the simulation and the tskit module is used to generate haplotype data.
+This script is for simulating data.
+This script uses the "isolation with migration" scenario from the pg-gan simulation software.
+The msprime module is used to perform the simulation.
 """
 
 # Import relevant libraries
@@ -73,6 +73,8 @@ migration_rates = [1e-9, 0.1, 0.9]
 # Output directory
 output_directory = "/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results"
 
+# Comment out code based on whether FST or Haplotype data needs to be simulated
+"""Haplotype based simulation"""
 # Function to save haplotype data
 def save_haplotypes(ts, output_file):
     # Generate haplotypes
@@ -91,6 +93,7 @@ for mig_rate in migration_rates:
         # Save haplotype data to a file
         save_haplotypes(ts, output_file)
 
+"""FST based simulation"""
 # Function to save FST values to a single file
 def complie_fst(fst_values, output_file):
     # Save all FST values to a file with a column for migration rate
@@ -119,7 +122,7 @@ for mig_rate in migration_rates:
         fst_data.append((mig_rate, fst))
 
 # Define the output file name for all FST values
-fst_output_file = os.path.join(output_directory, "fst_sims.txt")
+fst_output_file = os.path.join(output_directory, "simulation_output.txt")
 fst_output_file
 # Save all FST values to a single file
 complie_fst(fst_data, fst_output_file)

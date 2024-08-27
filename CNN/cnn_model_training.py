@@ -11,17 +11,14 @@ from functions import load_haplotypes
 Setup and Loading
 """
 # Set directory paths
-high_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1/High'
-medium_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1/Medium'
-low_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/Rep 1/Low'
+high_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Training Data/High'
+medium_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Training Data/Medium'
+low_dir = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/Simulation Results/CNN Training Data/Low'
 
 # Load haplotypes
 high = load_haplotypes(high_dir)
 medium = load_haplotypes(medium_dir)
 low = load_haplotypes(low_dir)
-
-# User status update
-print("Completed setup and loading.")
 
 """
 Data Preprocessing
@@ -31,7 +28,6 @@ min_hap_len_high = min(len(j) for i in high for j in i)
 min_hap_len_medium = min(len(j) for i in medium for j in i)
 min_hap_len_low = min(len(j) for i in low for j in i)
 min_hap_len = min(min_hap_len_high, min_hap_len_medium, min_hap_len_low)
-print("Minimum Sequence Length:", min_hap_len)
 
 # Define function to truncate training sequences
 def truncate(category):
@@ -52,9 +48,6 @@ low_hap_trunc = np.array(truncate(low))
 # Build original dataset
 original_data = np.concatenate((high_hap_trunc, med_hap_trunc, low_hap_trunc), axis=0)
 
-# User status update
-print("Completed data pre-processing.")
-
 """
 Data Augmentation
 """
@@ -69,9 +62,6 @@ flipped_data_depth = np.flip(original_data, axis=0)
 
 # Compile orginial and augmented datasets
 data = np.concatenate((original_data, flipped_data_horizontal, flipped_data_vertical, flipped_data_depth), axis=0)
-
-# User status update
-print("Completed data augmentation.")
 
 """
 Build Model
@@ -121,14 +111,11 @@ hist = model.fit(X, y, epochs=10, batch_size=16, validation_split=0.2)
 # Save model
 model.save('cnn.h5')
 
-# User status update
-print("Designed, fitted and saved model.")
-
 """
 Save Tabular Training Metrics
 """
 # File logistics
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Training Evaluation Logs/Tables/Mirroring'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN'
 output_file_name = 'metrics.tsv'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
@@ -149,16 +136,12 @@ df['Validation Loss (%)'] = df['Validation Loss (%)'].apply(lambda x: f"{x:.2f}"
 
 # Save the dataframe to a tsv file
 df.to_csv(metrics_file_path, sep='\t', index=False)
-print("Results saved as", output_file_name)
-
-# User status update
-print("Tabular metrics saved.")
 
 """
 Save Graphical Training Metrics
 """
 # Define the directory and file name
-output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN/Training Evaluation Logs/Images/Mirroring'
+output_directory = '/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN'
 output_file_name = 'plot.png'
 metrics_file_path = os.path.join(output_directory, output_file_name)
 
