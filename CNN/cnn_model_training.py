@@ -109,6 +109,7 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 hist = model.fit(X, y, epochs=10, batch_size=16, validation_split=0.2)
 
 # Save model
+os.chdir('/Users/jeremiahmushtaq/Documents/University/MSc Research Project/CNN')
 model.save('cnn.h5')
 
 """
