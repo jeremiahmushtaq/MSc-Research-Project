@@ -1,6 +1,5 @@
 """
-This script is for using simulated fst data to 
-classify migration levels using a support vector machine.
+This script is for using simulated fst data to classify migration levels using a support vector machine.
 """
 
 # Import necessary libraries

@@ -61,4 +61,4 @@ If you wish to simulate your own data for analysis:
 - **FST Plot Comparison:** The `fst_plot.R` file can be used to overlap and compare three different migration rates.
 
 ## **FYI**
-This model was developed for my Master's Disseration. Admitably, the predictive power of the model is low due to some limitations. These limitations and further information about this project found in the `Dissertation.pdf` file.
+This model was developed for my Masters Research Project. Admitably, the predictive power of the model is low due to some limitations. These limitations and further information about this project found in the `Dissertation.pdf` file in the main folder.
