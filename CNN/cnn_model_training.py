@@ -1,3 +1,8 @@
+"""
+This file implements the training phase of the CNN. 
+"""
+
+# Import dependancies
 import os
 import numpy as np
 import tensorflow as tf

@@ -1,3 +1,7 @@
+"""
+This file implements the testing/prediction phase of the CNN. 
+"""
+
 # Import dependancies
 import os
 import numpy as np
@@ -140,6 +144,6 @@ df = pd.DataFrame({
     'Evaluation Metric': metric_titles,
     'Value': metric_values
 })
-testing_metrics_file_name = 'binomial testing.tsv'
+testing_metrics_file_name = 'binomial_testing.tsv'
 full_metrics_path = os.path.join(testing_metrics_file_path, testing_metrics_file_name)
 df.to_csv(full_metrics_path, sep='\t', index=False)
